@@ -1,6 +1,6 @@
-import copy
 import os.path as osp
 import argparse
+from copy import deepcopy
 
 import torch
 import torch.nn as nn
@@ -10,8 +10,6 @@ from torch_geometric.datasets import Planetoid, Coauthor, Amazon
 from torch_geometric.utils import train_test_split_edges
 from torch_geometric.nn import GAE, VGAE, APPNP, GCNConv
 import torch_geometric.transforms as T
-
-from copy import deepcopy
 
 
 parser = argparse.ArgumentParser()
@@ -53,7 +51,6 @@ class Encoder(torch.nn.Module):
             self.c11 = GCNConv(in_channels, args.hidden_channels)
             self.c12 = GCNConv(args.hidden_channels, out_channels)
 
-            # self.c21 = GCNConv(in_channels, args.hidden_channels)
             self.c22 = GCNConv(args.hidden_channels, out_channels)
 
     def forward(self, x, edge_index, not_prop=0):
