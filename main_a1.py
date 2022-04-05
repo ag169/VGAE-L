@@ -53,13 +53,13 @@ class Encoder(torch.nn.Module):
             self.c11 = GCNConv(in_channels, args.hidden_channels)
             self.c12 = GCNConv(args.hidden_channels, out_channels)
 
-            self.c21 = GCNConv(in_channels, args.hidden_channels)
+            # self.c21 = GCNConv(in_channels, args.hidden_channels)
             self.c22 = GCNConv(args.hidden_channels, out_channels)
 
     def forward(self, x, edge_index, not_prop=0):
         if args.model == 'GNAE':
             x = self.linear1(x)
-            x = F.normalize(x,p=2,dim=1)  * args.scaling_factor
+            x = F.normalize(x, p=2, dim=1) * args.scaling_factor
             x = self.propagate(x, edge_index)
             return x
 
@@ -78,10 +78,9 @@ class Encoder(torch.nn.Module):
             return x, x_
 
         if args.model == 'VGAE':
-            x_ = self.c11(x, edge_index).relu()
-            x_ = self.c12(x_, edge_index)
+            x = self.c11(x, edge_index).relu()
+            x_ = self.c12(x, edge_index)
 
-            x = self.c21(x, edge_index).relu()
             x = self.c22(x, edge_index)
             return x, x_
 
@@ -92,12 +91,12 @@ dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 channels = args.channels
 
 train_rate = args.training_rate
-# val_ratio = (1-args.training_rate) / 3
-# test_ratio = (1-args.training_rate) / 3 * 2
+val_ratio = (1-args.training_rate) / 3
+test_ratio = (1-args.training_rate) / 3 * 2
 
 # Ratio as mentioned in paper
-val_ratio = (1 - train_rate) / 4
-test_ratio = (1 - train_rate) * 3 / 4
+# val_ratio = (1 - train_rate) / 4
+# test_ratio = (1 - train_rate) * 3 / 4
 
 data = train_test_split_edges(data.to(dev), val_ratio=val_ratio, test_ratio=test_ratio)
 
@@ -160,8 +159,14 @@ for epoch in range(1, args.epochs):
 
         print('Epoch: {:03d}, TRAIN_LOSS: {:.4f}, VAL_AUC: {:.4f}, VAL_AP: {:.4f}'.format(epoch, loss, auc, ap))
 
+    # lr_scheduler.step()
+
 print('*' * 50)
 print('Training complete!')
+print('*' * 50)
+
+print('Best VAL_AUC:', best_auc)
+print('Best VAL_AP:', best_ap)
 print('*' * 50)
 
 if best_auc_model is not None:
