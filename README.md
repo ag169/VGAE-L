@@ -1,38 +1,22 @@
-# VGNAE
-An implement of CIKM 2021 paper "Variational Graph Normalized Auto-Encoders" (CIKM 2021).
+# VGAE-L
+
+
+
+Based on the code of CIKM 2021 paper "Variational Graph Normalized Auto-Encoders" (CIKM 2021).
 > Variational Graph Normalized Auto-Encoders.  
 > Seong Jin Ahn, Myoung Ho Kim.  
 > CIKM '21: The 30th ACM International Conference on Information and Knowledge Management Proceedings.  
-> Short paper  
+> Short paper link: https://arxiv.org/abs/2108.08046
 
-Thank you for your interest in our works!  
-You can access our paper in https://arxiv.org/abs/2108.08046
+## Installation Instructions
 
-# Motivation
-We find out that GAEs make embeddings of isolated nodes (nodes with no-observed links) zero vectors regardless of their feature information.  
-Our works try to distinguish embeddings of isolated nodes by reflecting their feature information better.
-![image](https://user-images.githubusercontent.com/37531907/129611067-0c4cb724-0bea-4b4b-a5b0-7afc56f87643.png)  
-![image](https://user-images.githubusercontent.com/37531907/129611133-1dad1073-fcd2-4df8-a3df-1cca2cd2e090.png)
+1. Create a conda environment with python=3.8.0
+2. Install PyTorch v1.8.1 \
+Windows install command for cuda 11: `conda install pytorch==1.8.1 torchvision==0.9.1 torchaudio==0.8.1 cudatoolkit=11.1 -c pytorch -c conda-forge`
+3. Install PyTorch Sparse (and PyTorch Scatter): \
+`conda install pytorch-sparse -c pyg`
+4. Install PyTorch Geometric: \
+`pip install torch-geometric`
 
-# Dependencies
-Recent versions of the following packages for Python 3 are required:
-
-* Anaconda3
-* Python 3.8.0  
-* Pytorch 1.8.1  
-* torch_geometric 1.7.0  
-* torch_scatter 2.0.6  
-
-# Easy Run
-> python main.py --dataset=Cora --training_rate=0.2 --epochs=300
-
-# Citing
-If you make advantage of our VGNAE in your research, please cite the following in your manuscript:
-
-
->@article{ahn2021variational,  
->>  title={Variational Graph Normalized Auto-Encoders},  
->>  author={Ahn, Seong Jin and Kim, Myoung Ho},  
->>  journal={arXiv preprint arXiv:2108.08046},  
->>  year={2021}  
->}
+## Easy Run (from the paper authors)
+`python main_authors.py --dataset=Cora --training_rate=0.2 --epochs=300`
