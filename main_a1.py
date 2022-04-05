@@ -19,6 +19,7 @@ parser.add_argument('--model', type=str, default='VGNAE')
 parser.add_argument('--dataset', type=str, default='Cora')
 parser.add_argument('--epochs', type=int, default=300)
 parser.add_argument('--channels', type=int, default=128)
+parser.add_argument('--hidden_channels', type=int, default=128)
 parser.add_argument('--scaling_factor', type=float, default=1.8)
 parser.add_argument('--training_rate', type=float, default=0.8)
 parser.add_argument('--learning_rate', type=float, default=0.005)
@@ -49,8 +50,11 @@ class Encoder(torch.nn.Module):
             self.linear2 = nn.Linear(in_channels, out_channels)
             self.propagate = APPNP(K=1, alpha=0)
         else:
-            self.c1 = GCNConv(in_channels, out_channels)
-            self.c2 = GCNConv(in_channels, out_channels)
+            self.c11 = GCNConv(in_channels, args.hidden_channels)
+            self.c12 = GCNConv(args.hidden_channels, out_channels)
+
+            self.c21 = GCNConv(in_channels, args.hidden_channels)
+            self.c22 = GCNConv(args.hidden_channels, out_channels)
 
     def forward(self, x, edge_index, not_prop=0):
         if args.model == 'GNAE':
@@ -60,7 +64,8 @@ class Encoder(torch.nn.Module):
             return x
 
         if args.model == 'GAE':
-            x = self.c1(x, edge_index)
+            x = self.c11(x, edge_index).relu()
+            x = self.c12(x, edge_index)
             return x
 
         if args.model == 'VGNAE':
@@ -73,9 +78,11 @@ class Encoder(torch.nn.Module):
             return x, x_
 
         if args.model == 'VGAE':
-            x_ = self.c1(x, edge_index)
+            x_ = self.c11(x, edge_index).relu()
+            x_ = self.c12(x_, edge_index)
 
-            x = self.c2(x, edge_index)
+            x = self.c21(x, edge_index).relu()
+            x = self.c22(x, edge_index)
             return x, x_
 
         return x
@@ -102,7 +109,7 @@ if args.model in ['VGNAE', 'VGAE']:
 
 data.train_mask = data.val_mask = data.test_mask = data.y = None
 x, train_pos_edge_index = data.x.to(dev), data.train_pos_edge_index.to(dev)
-optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=1.e-5)
 
 
 def train():
