@@ -2,6 +2,7 @@ import subprocess
 import numpy as np
 
 
+# Change the parameters here to evaluate the model's test metrics
 model = 'VGNAE'
 dataset = 'Cora'
 epochs = 300
@@ -9,15 +10,13 @@ output_channels = 128
 training_rate = 0.8
 lr = 0.005
 
-script = 'main_a1.py'
-
 NUM_TIMES = 10
 
 auc_list = list()
 ap_list = list()
 
 for ii in range(NUM_TIMES):
-    result = subprocess.run(['python', script, '--model', f'{model}', '--dataset',
+    result = subprocess.run(['python', 'main_a1.py', '--model', f'{model}', '--dataset',
                              f'{dataset}', '--epochs', f'{epochs}', '--channels', f'{output_channels}',
                              '--training_rate', f'{training_rate}', '--learning_rate', f'{lr}'],
                             stdout=subprocess.PIPE)
