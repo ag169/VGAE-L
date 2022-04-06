@@ -20,3 +20,8 @@ Windows install command for cuda 11: `conda install pytorch==1.8.1 torchvision==
 
 ## Easy Run (from the paper authors)
 `python main_authors.py --dataset=Cora --training_rate=0.2 --epochs=300`
+
+## Easier Run
+`python loop_eval_a1.py`\
+Trains the model over multiple random data-splits \
+Modify the parameters in `loop_eval_a1.py` to evaluate `VGAE`, `GAE`, `GNAE` and `VGNAE` models
