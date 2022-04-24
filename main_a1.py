@@ -28,9 +28,9 @@ path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', args.dataset)
 if args.dataset in ['Cora', 'CiteSeer', 'PubMed']:
     dataset = Planetoid(path, args.dataset, 'public')
 elif args.dataset in ['cs', 'physics']:
-    dataset = Coauthor(path, args.dataset, 'public')
+    dataset = Coauthor(path, args.dataset)
 elif args.dataset in ['computers', 'photo']:
-    dataset = Amazon(path, args.dataset, 'public')
+    dataset = Amazon(path, args.dataset)
 else:
     raise ValueError
 
