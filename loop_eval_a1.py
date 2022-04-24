@@ -11,7 +11,7 @@ hidden_channels = 128
 training_rate = 0.8
 lr = 0.005
 
-NUM_TIMES = 5
+NUM_TIMES = 10
 
 auc_list = list()
 ap_list = list()

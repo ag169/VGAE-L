@@ -48,10 +48,11 @@ class Encoder(torch.nn.Module):
             self.linear2 = nn.Linear(in_channels, out_channels)
             self.propagate = APPNP(K=1, alpha=0)
         else:
-            self.c11 = GCNConv(in_channels, args.hidden_channels)
-            self.c12 = GCNConv(args.hidden_channels, out_channels)
+            # Single layer GAE for fair comparison
+            # self.c11 = GCNConv(in_channels, args.hidden_channels)
 
-            self.c22 = GCNConv(args.hidden_channels, out_channels)
+            self.c12 = GCNConv(in_channels, out_channels)
+            self.c22 = GCNConv(in_channels, out_channels)
 
     def forward(self, x, edge_index, not_prop=0):
         if args.model == 'GNAE':
@@ -61,7 +62,7 @@ class Encoder(torch.nn.Module):
             return x
 
         if args.model == 'GAE':
-            x = self.c11(x, edge_index).relu()
+            # x = self.c11(x, edge_index).relu()
             x = self.c12(x, edge_index)
             return x
 
@@ -70,12 +71,12 @@ class Encoder(torch.nn.Module):
             x_ = self.propagate(x_, edge_index)
 
             x = self.linear2(x)
-            x = F.normalize(x,p=2,dim=1) * args.scaling_factor
+            x = F.normalize(x, p=2, dim=1) * args.scaling_factor
             x = self.propagate(x, edge_index)
             return x, x_
 
         if args.model == 'VGAE':
-            x = self.c11(x, edge_index).relu()
+            # x = self.c11(x, edge_index).relu()
             x_ = self.c12(x, edge_index)
 
             x = self.c22(x, edge_index)
@@ -106,7 +107,7 @@ if args.model in ['VGNAE', 'VGAE']:
 data.train_mask = data.val_mask = data.test_mask = data.y = None
 x, train_pos_edge_index = data.x.to(dev), data.train_pos_edge_index.to(dev)
 optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=1.e-5)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.2)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
 
 
 def train():
