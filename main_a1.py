@@ -153,7 +153,7 @@ for epoch in range(1, args.epochs):
         auc, ap = test(data.val_pos_edge_index, data.val_neg_edge_index)
 
         if best_auc is None or auc > best_auc:
-            best_auc = ap
+            best_auc = auc
             best_auc_model = deepcopy(model)
 
         if best_ap is None or ap > best_ap:
