@@ -135,7 +135,7 @@ def test(pos_edge_index, neg_edge_index, plot_his=0, test_model=None):
     model_.eval()
     with torch.no_grad():
         z = model_.encode(x, train_pos_edge_index)
-    return model_.test(z, pos_edge_index, neg_edge_index)
+        return model_.test(z, pos_edge_index, neg_edge_index)
 
 
 best_auc = None

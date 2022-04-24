@@ -46,7 +46,7 @@ for ii in range(NUM_TIMES):
 
 print('Loop finished!')
 print(f'Model: {model}, Dataset: {dataset}')
-print(f'Average test AUC: {np.mean(auc_list):.5f} +- {np.std(auc_list):.5f}')
-print(f'Average test AP: {np.mean(ap_list):.5f} +- {np.std(ap_list):.5f}')
+print(f'Average test AUC: {np.mean(auc_list)*100:.5f} +- {np.std(auc_list)*100:.5f}')
+print(f'Average test AP: {np.mean(ap_list)*100:.5f} +- {np.std(ap_list)*100:.5f}')
 
 print('Done')
