@@ -3,14 +3,15 @@ import numpy as np
 
 
 # Change the parameters here to evaluate the model's test metrics
-model = 'VGNAE'
+model = 'GNAE'
 dataset = 'Cora'
 epochs = 300
 output_channels = 128
+hidden_channels = 128
 training_rate = 0.8
 lr = 0.005
 
-NUM_TIMES = 10
+NUM_TIMES = 5
 
 auc_list = list()
 ap_list = list()
@@ -18,6 +19,7 @@ ap_list = list()
 for ii in range(NUM_TIMES):
     result = subprocess.run(['python', 'main_a1.py', '--model', f'{model}', '--dataset',
                              f'{dataset}', '--epochs', f'{epochs}', '--channels', f'{output_channels}',
+                             '--hidden_channels', f'{hidden_channels}',
                              '--training_rate', f'{training_rate}', '--learning_rate', f'{lr}'],
                             stdout=subprocess.PIPE)
 

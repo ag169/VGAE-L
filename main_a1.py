@@ -89,7 +89,7 @@ channels = args.channels
 
 train_rate = args.training_rate
 val_ratio = (1-args.training_rate) / 3
-test_ratio = (1-args.training_rate) / 3 * 2
+test_ratio = (1-args.training_rate) * 2 / 3
 
 # Ratio as mentioned in paper
 # val_ratio = (1 - train_rate) / 4
@@ -106,6 +106,7 @@ if args.model in ['VGNAE', 'VGAE']:
 data.train_mask = data.val_mask = data.test_mask = data.y = None
 x, train_pos_edge_index = data.x.to(dev), data.train_pos_edge_index.to(dev)
 optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=1.e-5)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.2)
 
 
 def train():
@@ -117,6 +118,7 @@ def train():
         loss = loss + (1 / data.num_nodes) * model.kl_loss()
     loss.backward()
     optimizer.step()
+    scheduler.step()
     return loss
 
 
