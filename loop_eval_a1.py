@@ -3,7 +3,7 @@ import numpy as np
 
 
 # Change the parameters here to evaluate the model's test metrics
-model = 'GNAE'
+model = 'VGNAE'
 dataset = 'Cora'
 epochs = 300
 output_channels = 128
