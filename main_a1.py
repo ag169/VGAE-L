@@ -62,28 +62,27 @@ class Encoder(torch.nn.Module):
             return x
 
         if args.model == 'GAE':
-            x = self.c11(x, edge_index)
-            x = self.b11(x).relu()
+            x = self.c11(x, edge_index).relu()
             x = self.c12(x, edge_index)
             return x
 
         if args.model == 'VGNAE':
-            x_ = self.linear1(x)
-            x_ = self.propagate(x_, edge_index)
+            xm = self.linear1(x)
+            xm = F.normalize(xm, p=2, dim=1) * args.scaling_factor
+            xm = self.propagate(xm, edge_index)
 
-            x = self.linear2(x)
-            x = F.normalize(x, p=2, dim=1) * args.scaling_factor
-            x = self.propagate(x, edge_index)
-            return x, x_
+            x_ = self.linear2(x)
+            x_ = self.propagate(x_, edge_index)
+            return xm, x_
 
         if args.model == 'VGAE':
             x = self.c11(x, edge_index)
             x = self.b11(x).relu()
 
-            x_ = self.c12(x, edge_index)
+            xm = self.c12(x, edge_index)
 
-            x = self.c22(x, edge_index)
-            return x, x_
+            x_ = self.c22(x, edge_index)
+            return xm, x_
 
         return x
 

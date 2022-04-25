@@ -3,8 +3,8 @@ import numpy as np
 
 
 # Change the parameters here to evaluate the model's test metrics
-model = 'VGNAE'
-dataset = 'Cora'
+model = 'GAE'
+dataset = 'computers'
 epochs = 300
 output_channels = 128
 hidden_channels = 128
