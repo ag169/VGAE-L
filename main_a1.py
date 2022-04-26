@@ -87,6 +87,23 @@ class Encoder(torch.nn.Module):
         return x
 
 
+class Encoder2(torch.nn.Module):
+    def __init__(self, in_channels, out_channels, edge_index, dropout_rate=0.4):
+        super(Encoder2, self).__init__()
+        assert args.model == 'MLP'
+
+        self.mlp = nn.Sequential(
+            nn.Linear(in_channels, args.hidden_channels),
+            nn.BatchNorm1d(args.hidden_channels),
+            nn.LeakyReLU(),
+            nn.Dropout(p=dropout_rate),
+            nn.Linear(args.hidden_channels, out_channels),
+        )
+
+    def forward(self, x, edge_index, not_prop=0):
+        return self.mlp(x)
+
+
 dev = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 channels = args.channels
 
@@ -103,6 +120,10 @@ data = train_test_split_edges(data.to(dev), val_ratio=val_ratio, test_ratio=test
 N = int(data.x.size()[0])
 if args.model in ['GNAE', 'GAE']:
     model = GAE(Encoder(data.x.size()[1], channels, data.train_pos_edge_index)).to(dev)
+
+if args.model in ['MLP']:
+    model = GAE(Encoder2(data.x.size()[1], channels, data.train_pos_edge_index)).to(dev)
+
 if args.model in ['VGNAE', 'VGAE']:
     model = VGAE(Encoder(data.x.size()[1], channels, data.train_pos_edge_index)).to(dev)
 
