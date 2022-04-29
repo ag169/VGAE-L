@@ -62,7 +62,7 @@ class Encoder(torch.nn.Module):
             return x
 
         if args.model == 'GAE':
-            x = self.c11(x, edge_index).relu()
+            x = self.b11(self.c11(x, edge_index)).relu()
             x = self.c12(x, edge_index)
             return x
 
